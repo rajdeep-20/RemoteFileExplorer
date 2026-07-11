@@ -22,7 +22,7 @@ public class DeviceController {
         String deviceID = payload.get("deviceID");
         String FCMToken = payload.get("FCMToken");
         String deviceName = payload.get("deviceName");
-        return ResponseEntity.ok(deviceService.deviceRegister(deviceID, FCMToken, deviceName));
+        return ResponseEntity.ok(deviceService.deviceRegister(deviceID, deviceName, FCMToken));
     }
 
     @PostMapping("/heartbeat")

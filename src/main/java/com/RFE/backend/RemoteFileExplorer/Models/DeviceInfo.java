@@ -10,7 +10,7 @@ import java.time.Instant;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Document(collation = "Device Info")
+@Document(collection = "device_info")
 public class DeviceInfo {
     @Id
     private String deviceID;
