@@ -1,0 +1,9 @@
+# ============================================================
+# application-local.properties.template
+# Copy this file to application-local.properties and fill in
+# your real credentials. That file is gitignored and safe.
+# ============================================================
+
+# MongoDB Atlas - Use the read/write user for normal app operations
+# Format: mongodb+srv://<user>:<password>@cluster0.4kfwxhp.mongodb.net/fileexplorer?retryWrites=true&w=majority
+MONGO_URI=mongodb+srv://<rw_username>:<rw_password>@cluster0.4kfwxhp.mongodb.net/fileexplorer?retryWrites=true&w=majority
