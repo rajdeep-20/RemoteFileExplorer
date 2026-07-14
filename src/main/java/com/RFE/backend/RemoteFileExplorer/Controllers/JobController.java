@@ -24,20 +24,20 @@ public class JobController {
 
 
     @GetMapping("/pending")
-    public ResponseEntity<List<Jobs>> getPendingJobs(@RequestHeader ("X-Device-id") String deviceID){
+    public ResponseEntity<List<Jobs>> getPendingJobs(@RequestHeader("X-Device-ID") String deviceID){
         return ResponseEntity.ok(jobCoordinatorService.getPendingJobs(deviceID));
     }
 
 
     @PostMapping("/claim")
-    public ResponseEntity<Jobs> claimNextJob(@RequestHeader("X-Device-id") String deviceID){
+    public ResponseEntity<Jobs> claimNextJob(@RequestHeader("X-Device-ID") String deviceID){
         Jobs jobs = jobCoordinatorService.claimNextJob(deviceID);
         return jobs != null ? ResponseEntity.ok(jobs) : ResponseEntity.noContent().build();
     }
 
 
     @PostMapping("/{jobID}/complete")
-    public ResponseEntity<Void> completeJobs(@PathVariable String jobID, @RequestBody Map<String, String> payload){
+    public ResponseEntity<Void> completeJob(@PathVariable String jobID, @RequestBody Map<String, String> payload){
         Jobs.Status jobStatus = Jobs.Status.valueOf(payload.get("status"));
         String errorMessage = payload.get("errorMessage");
         String resultPayload = payload.get("resultPayload");

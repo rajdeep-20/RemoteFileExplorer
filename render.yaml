@@ -1,0 +1,20 @@
+services:
+  # The web service configuration for your Spring Boot Backend
+  - type: web
+    name: remote-file-explorer-backend
+    env: docker
+    region: frankfurt # Choose frankfurt, oregon, ohio, singapore
+    plan: free # Start with the free tier
+
+    # Render automatically detects the Dockerfile in the root directory
+    dockerCommand: "java -jar app.jar"
+
+    envVars:
+      - key: MONGO_URI
+        sync: false # Set this value manually in the Render Dashboard
+      - key: FIREBASE_PROJECT_ID
+        sync: false # Set this value manually in the Render Dashboard if needed
+      - key: FIREBASE_PRIVATE_KEY
+        sync: false # Set this value manually in the Render Dashboard if needed
+      - key: FIREBASE_CLIENT_EMAIL
+        sync: false # Set this value manually in the Render Dashboard if needed

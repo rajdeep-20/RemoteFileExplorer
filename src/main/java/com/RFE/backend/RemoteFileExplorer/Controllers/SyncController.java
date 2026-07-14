@@ -13,14 +13,14 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/sync")
+@RequestMapping("/api/v1/sync")
 public class SyncController {
     private final MetaDataService metaDataService;
 
 
     @PostMapping("/metadata")
     public ResponseEntity<Map<String, Integer>> syncMetaData
-            (@RequestHeader("X-Device-id") String deviceID,
+            (@RequestHeader("X-Device-ID") String deviceID,
              @RequestBody List<FileMetaData> metaDataList){
         Map<String, Integer> stats = metaDataService.syncMetaData(deviceID, metaDataList);
         return  ResponseEntity.ok(stats);

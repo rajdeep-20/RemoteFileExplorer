@@ -23,10 +23,11 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 // Device endpoints are called by device agents, no user auth needed
                 .requestMatchers("/api/v1/devices/**").permitAll()
+                // Web client endpoints are public for now (remove for production)
+                .requestMatchers("/api/v1/web/**").permitAll()
                 // All other endpoints require authentication
                 .anyRequest().authenticated()
             );
         return http.build();
     }
 }
-

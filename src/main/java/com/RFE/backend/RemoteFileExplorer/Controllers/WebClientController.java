@@ -18,7 +18,7 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/web")
+@RequestMapping("/api/v1/web")
 public class WebClientController {
 
     private final DeviceService deviceService;
@@ -32,19 +32,19 @@ public class WebClientController {
         return ResponseEntity.ok(deviceService.getAllDevices());
     }
 
-    @GetMapping("files")
+    @GetMapping("/files")
     public ResponseEntity<List<FileMetaData>> listFiles(@RequestParam String deviceID, @RequestParam String path){
         return ResponseEntity.ok(metaDataService.getFilesByPath(deviceID, path));
     }
 
-    @PostMapping("request/downloads")
+    @PostMapping("/request/downloads")
     public ResponseEntity<Jobs> requestDownload(@RequestBody Map<String, String> payload){
         String deviceID = payload.get("deviceID");
         String filePath = payload.get("path");
         return ResponseEntity.ok(jobCoordinatorService.createDownloadJob(deviceID, filePath));
     }
 
-    @PostMapping("download/{jobID}")
+    @PostMapping("/download/{jobID}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String jobID){
         File file = fileTransferService.getTemporarilyStoredFile(jobID);
         if(!file.exists()){
@@ -57,7 +57,7 @@ public class WebClientController {
     }
 
     @PostMapping("/jobs")
-    public ResponseEntity<Jobs> createJobs(@RequestBody Map<String, String> payload){
+    public ResponseEntity<Jobs> createJob(@RequestBody Map<String, String> payload){
         String deviceID = payload.get("deviceID");
         Jobs.Type type = Jobs.Type.valueOf(payload.get("type"));
         String jobPayload = payload.get("payload");

@@ -4,15 +4,15 @@ import com.RFE.backend.RemoteFileExplorer.Models.DeviceInfo;
 import com.RFE.backend.RemoteFileExplorer.Services.DeviceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
-@Controller
-@RequestMapping("api/v1/devices")
+@RestController
+@RequestMapping("/api/v1/devices")
 @RequiredArgsConstructor
 public class DeviceController {
     private final DeviceService deviceService;
