@@ -11,6 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/web")
+@RequestMapping("/api/v1/web")
 public class WebClientController {
 
     private final DeviceService deviceService;
@@ -26,25 +27,24 @@ public class WebClientController {
     private final FileTransferService fileTransferService;
     private final MetaDataService metaDataService;
 
-
     @GetMapping("/devices")
     public ResponseEntity<List<DeviceInfo>> listDevices(){
         return ResponseEntity.ok(deviceService.getAllDevices());
     }
 
-    @GetMapping("files")
+    @GetMapping("/files")
     public ResponseEntity<List<FileMetaData>> listFiles(@RequestParam String deviceID, @RequestParam String path){
         return ResponseEntity.ok(metaDataService.getFilesByPath(deviceID, path));
     }
 
-    @PostMapping("request/downloads")
+    @PostMapping("/request/downloads")
     public ResponseEntity<Jobs> requestDownload(@RequestBody Map<String, String> payload){
         String deviceID = payload.get("deviceID");
         String filePath = payload.get("path");
         return ResponseEntity.ok(jobCoordinatorService.createDownloadJob(deviceID, filePath));
     }
 
-    @PostMapping("download/{jobID}")
+    @PostMapping("/download/{jobID}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String jobID){
         File file = fileTransferService.getTemporarilyStoredFile(jobID);
         if(!file.exists()){
@@ -52,16 +52,37 @@ public class WebClientController {
         }
         Resource resource = new FileSystemResource(file);
         return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename\"" + file.getName() + "\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"")
                 .body(resource);
     }
 
     @PostMapping("/jobs")
-    public ResponseEntity<Jobs> createJobs(@RequestBody Map<String, String> payload){
+    public ResponseEntity<Jobs> createJob(@RequestBody Map<String, String> payload){
         String deviceID = payload.get("deviceID");
         Jobs.Type type = Jobs.Type.valueOf(payload.get("type"));
         String jobPayload = payload.get("payload");
         return ResponseEntity.ok(jobCoordinatorService.createJob(deviceID, type, jobPayload));
+    }
+
+    @GetMapping("/jobs/{jobID}/status")
+    public ResponseEntity<Map<String, String>> getJobStatus(@PathVariable String jobID) {
+        Jobs job = jobCoordinatorService.getJobById(jobID);
+        if (job == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(Map.of(
+                "jobID", job.getJobID(),
+                "status", job.getStatus().name(),
+                "type", job.getType().name()
+        ));
+    }
+
+    @PostMapping("/upload/{jobID}")
+    public ResponseEntity<Void> uploadFile(@PathVariable String jobID, @RequestParam("file") MultipartFile file) {
+        try {
+            fileTransferService.storeTemporarily(jobID, file);
+            return ResponseEntity.ok().build();
+        } catch (java.io.IOException e) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
 }

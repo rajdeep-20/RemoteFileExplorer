@@ -10,13 +10,15 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(collation = "Files")
+@Document(collection = "Files")
 public class FileMetaData {
     @Id
     private String id;
     @Indexed
     private String deviceID;
     private String path;
+    @Indexed
+    private String parentPath;
     private String name;
     private long size;
     private long lastModified;

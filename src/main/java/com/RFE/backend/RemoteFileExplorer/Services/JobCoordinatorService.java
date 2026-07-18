@@ -68,5 +68,8 @@ public class JobCoordinatorService {
         jobrepo.save(jobs);
     }
 
+    public Jobs getJobById(String jobID) {
+        return jobrepo.findById(jobID).orElse(null);
+    }
 
 }

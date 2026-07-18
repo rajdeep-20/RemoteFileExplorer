@@ -12,7 +12,7 @@ import java.time.Instant;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(collation = "Jobs")
+@Document(collection = "Jobs")
 public class Jobs {
     @Id
     private String jobID;
